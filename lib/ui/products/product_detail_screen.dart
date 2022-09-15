@@ -4,8 +4,10 @@ import '../../models/product.dart';
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen(
     this.product, {
-    super.key,
-  });
+      super.key,
+    }
+  );
+
   final Product product;
 
   @override
@@ -18,23 +20,23 @@ class ProductDetailScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 300,
+              height:300,
               width: double.infinity,
               child: Image.network(
-                product.imageUrl,
+                product.imageURL,
                 fit: BoxFit.cover,
-              ),
+              )
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 10,),
             Text(
-              "\$${product.price}",
+              '\$${product.price}',
               style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 20,
               ),
             ),
             const SizedBox(
-              height: 10,
+              height:10,
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -43,11 +45,11 @@ class ProductDetailScreen extends StatelessWidget {
                 product.description,
                 textAlign: TextAlign.center,
                 softWrap: true,
-              ),
-            ),
-          ],
-        ),
-      ),
+              )
+            )
+          ]
+        )
+      )
     );
   }
 }

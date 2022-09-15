@@ -3,7 +3,7 @@ class Product {
   final String title;
   final String description;
   final double price;
-  final String imageUrl;
+  final String imageURL;
   final bool isFavorite;
 
   Product({
@@ -11,15 +11,16 @@ class Product {
     required this.title,
     required this.description,
     required this.price,
-    required this.imageUrl,
+    required this.imageURL,
     this.isFavorite = false,
   });
+
   Product copyWith({
     String? id,
     String? title,
     String? description,
     double? price,
-    String? imageUrl,
+    String? imageURL,
     bool? isFavorite,
   }) {
     return Product(
@@ -27,7 +28,7 @@ class Product {
       title: title ?? this.title,
       description: description ?? this.description,
       price: price ?? this.price,
-      imageUrl: imageUrl ?? this.imageUrl,
+      imageURL: imageURL ?? this.imageURL,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
