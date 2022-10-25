@@ -8,6 +8,25 @@ class Product {
   final String imageURL;
   final ValueNotifier<bool> _isFavorite;
 
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'price': price,
+      'imageURL': imageURL,
+    };
+  }
+
+  static Product fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      price: json['price'],
+      imageURL: json['imageURL'],
+    );
+  }
+
   Product({
     this.id,
     required this.title,

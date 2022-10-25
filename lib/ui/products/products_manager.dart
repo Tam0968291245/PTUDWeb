@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 
+import '../../models/auth_token.dart';
 import '../../models/product.dart';
+import '../../services/products_service.dart';
 
 class ProductsManager with ChangeNotifier {
-  final List<Product> _items = [
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -39,6 +41,28 @@ class ProductsManager with ChangeNotifier {
       isFavorite: true,
     ),
   ];
+
+  final ProductsService _productsService;
+  ProductsManager([AuthToken? authToken])
+      : _productsService = ProductsService(authToken);
+
+  set authToken(AuthToken? authToken) {
+    _productsService.authToken = authToken;
+  }
+
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    _items = await _productsService.fetchProducts(filterByUser);
+    notifyListeners();
+  }
+
+  Future<void> addProduct(Product product) async {
+    final newProduct = await _productsService.addProduct(product);
+    if (newProduct != null) {
+      _items.add(newProduct);
+      notifyListeners();
+    }
+  }
+
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
@@ -53,15 +77,6 @@ class ProductsManager with ChangeNotifier {
 
   List<Product> get favoriteItems {
     return _items.where((proItem) => proItem.isFavorite).toList();
-  }
-
-  void addProduct(Product product) {
-    _items.add(
-      product.copyWith(
-        id: 'p${DateTime.now().toIso8601String()}',
-      ),
-    );
-    notifyListeners();
   }
 
   void updateProduct(Product product) {
