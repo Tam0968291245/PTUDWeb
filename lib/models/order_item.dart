@@ -16,6 +16,7 @@ class OrderItem {
     required this.products,
     DateTime? dateTime,
   }) : dateTime = dateTime ?? DateTime.now();
+
   OrderItem copyWith({
     String? id,
     double? amount,

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/ui/cart/cart_manager.dart';
-
+import 'package:provider/provider.dart';
 import '../../models/cart_item.dart';
 import '../shared/dialog_utils.dart';
-import 'package:provider/provider.dart';
+import 'cart_manager.dart';
 
 class CartItemCard extends StatelessWidget {
   final String productId;
@@ -14,7 +13,6 @@ class CartItemCard extends StatelessWidget {
     required this.cardItem,
     super.key,
   });
-
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -33,11 +31,11 @@ class CartItemCard extends StatelessWidget {
           size: 40,
         ),
       ),
-      direction: DismissDirection.endToStart,
+      direction:  DismissDirection.endToStart,
       confirmDismiss: (direction) {
         return showConfirmDialog(
           context,
-          'do you want to remove the item from the cart?',
+          'Do you want to remove the item from the cart?',
         );
       },
       onDismissed: (direction) {
@@ -46,7 +44,6 @@ class CartItemCard extends StatelessWidget {
       child: buildItemCard(),
     );
   }
-
   Widget buildItemCard() {
     return Card(
       margin: const EdgeInsets.symmetric(
@@ -65,8 +62,8 @@ class CartItemCard extends StatelessWidget {
             ),
           ),
           title: Text(cardItem.title),
-          subtitle: Text('Total:\$${(cardItem.price * cardItem.quantily)}'),
-          trailing: Text('${cardItem.quantily} x'),
+          subtitle: Text('Total: \$${(cardItem.price * cardItem.quantity)}'),
+          trailing: Text('${cardItem.quantity} x'),
         ),
       ),
     );

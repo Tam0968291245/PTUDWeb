@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/models/cart_item.dart';
-import 'package:myapp/ui/cart/cart_manager.dart';
-import '../../models/product.dart';
-import 'product_detail_screen.dart';
 import 'package:provider/provider.dart';
+import '../../models/product.dart';
+import '../cart/cart_manager.dart';
+import 'products_detail_screen.dart';
 
 class ProductGridTile extends StatelessWidget {
   const ProductGridTile(
     this.product, {
-    super.key,
-  });
+      super.key,
+    }
+  );
 
   final Product product;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: GridTile(
-            footer: buildGridFooterBar(context),
-            child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    ProductDetailScreen.routeName,
-                    arguments: product.id,
-                  );
-                },
-                child: Image.network(
-                  product.imageURL,
-                  fit: BoxFit.cover,
-                ))));
+      borderRadius: BorderRadius.circular(10),
+      child: GridTile(
+        footer: buildGridFooterBar(context),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ProductDetailScreen.routeName,
+              arguments: product.id,
+            );
+          },
+          child: Image.network(
+            product.imageURL,
+            fit: BoxFit.cover,
+          )
+        )
+      )
+    );
   }
-
-  Widget buildGridFooterBar(BuildContext context) {
+  Widget buildGridFooterBar(BuildContext context){
     return GridTileBar(
       backgroundColor: Colors.black87,
       leading: ValueListenableBuilder<bool>(
@@ -47,7 +49,7 @@ class ProductGridTile extends StatelessWidget {
               product.isFavorite = !isFavorite;
             },
           );
-        },
+        }
       ),
       title: Text(
         product.title,
@@ -68,15 +70,15 @@ class ProductGridTile extends StatelessWidget {
                 duration: const Duration(seconds: 2),
                 action: SnackBarAction(
                   label: 'UNDO',
-                  onPressed: () {
+                  onPressed:() {
                     cart.removeSingleItem(product.id!);
                   },
-                ),
-              ),
+                )
+              )
             );
         },
         color: Theme.of(context).colorScheme.secondary,
-      ),
+      )
     );
   }
 }

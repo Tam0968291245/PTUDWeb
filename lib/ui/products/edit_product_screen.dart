@@ -2,42 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/product.dart';
 import '../shared/dialog_utils.dart';
+
 import 'products_manager.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
+
   EditProductScreen(
     Product? product, {
-    super.key,
-  }) {
-    if (product == null) {
-      this.product = Product(
-        id: null,
-        title: '',
-        price: 0,
-        description: '',
-        imageURL: '',
-      );
-    } else {
-      this.product = product;
+      super.key,
+    }) {
+      if (product == null) {
+        this.product = Product(
+          id: null,
+          title: '',
+          price: 0,
+          description: '',
+          imageURL: '',
+        );
+      } else {
+        this.product = product;
+      }
     }
-  }
-  late final Product product;
-  @override
-  State<EditProductScreen> createState() => _EditProductScreenState();
+
+    late final Product product;
+
+    @override
+    State<EditProductScreen> createState() => _EditProductScreenState();
 }
 
-class _EditProductScreenState extends State<EditProductScreen> {
+class _EditProductScreenState extends State<EditProductScreen>{
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _editForm = GlobalKey<FormState>();
   late Product _editedProduct;
   var _isLoading = false;
+
   bool _isValidImageUrl(String value) {
-    return (value.startsWith('http') || value.startsWith('https')) &&
-        (value.endsWith('.png') ||
-            value.endsWith('.jpg') ||
-            value.endsWith('.jpeg'));
+    return (value.startsWith('http') || value.startsWith('https')) && (value.endsWith('.png') || value.endsWith('.jpg') || value.endsWith('.jpeg'));
   }
 
   @override
@@ -47,12 +49,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
         if (!_isValidImageUrl(_imageUrlController.text)) {
           return;
         }
-        //anh hien hop le -> Ve lai man hinh de hien review
         setState(() {});
       }
     });
     _editedProduct = widget.product;
     _imageUrlController.text = _editedProduct.imageURL;
+    super.initState();
   }
 
   @override
@@ -68,6 +70,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _editForm.currentState!.save();
+    
     setState(() {
       _isLoading = true;
     });
@@ -80,7 +83,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         productsManager.addProduct(_editedProduct);
       }
     } catch (error) {
-      await showErrorDialog(context, "Something went wrong.");
+      await showErrorDialog(context, 'Something went wrong.');
     }
 
     setState(() {
@@ -106,34 +109,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
       ),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
-            )
+            child: CircularProgressIndicator()
+          )
           : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _editForm,
-                child: ListView(
-                  children: <Widget>[
-                    buildTitleField(),
-                    buildPriceField(),
-                    buildDescriptionField(),
-                    buildProductPreview(),
-                  ],
-                ),
-              ),
-            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _editForm,
+              child: ListView(
+                children: <Widget>[
+                  buildTitleField(),
+                  buildPriceField(),
+                  buildDescriptionField(),
+                  buildProductPreview(),
+                ]
+              )
+            )
+          )
     );
   }
-
+  
   TextFormField buildTitleField() {
     return TextFormField(
       initialValue: _editedProduct.title,
-      decoration: const InputDecoration(labelText: "Title"),
+      decoration: const InputDecoration(labelText: 'Title',),
       textInputAction: TextInputAction.next,
       autofocus: true,
       validator: (value) {
         if (value!.isEmpty) {
-          return "Please provide a value.";
+          return 'Please provide a value.';
         }
         return null;
       },
@@ -142,52 +145,52 @@ class _EditProductScreenState extends State<EditProductScreen> {
       },
     );
   }
-
+  
   TextFormField buildPriceField() {
     return TextFormField(
       initialValue: _editedProduct.price.toString(),
-      decoration: const InputDecoration(labelText: "Price"),
+      decoration: const InputDecoration(labelText: 'Price'),
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Please enter a price";
+      validator:(value) {
+        if(value!.isEmpty) {
+          return 'Please enter a price.';
         }
         if (double.tryParse(value) == null) {
-          return "Please enter a vaild number.";
+          return 'Please enter a number greater than zero.';
         }
         if (double.parse(value) <= 0) {
-          return "Please enter a number greater than zero.";
+          return 'Please enter a number greater than zero.';
         }
         return null;
       },
       onSaved: (value) {
         _editedProduct = _editedProduct.copyWith(price: double.parse(value!));
-      },
+      }
     );
   }
-
+  
   TextFormField buildDescriptionField() {
     return TextFormField(
       initialValue: _editedProduct.description,
-      decoration: const InputDecoration(labelText: "Description"),
+      decoration: const InputDecoration(labelText: 'Description'),
       maxLines: 3,
       keyboardType: TextInputType.multiline,
       validator: (value) {
         if (value!.isEmpty) {
-          return "Please enter a description.";
+          return 'Please enter a description.';
         }
         if (value.length < 10) {
-          return "Should be at least 10 characters long.";
+          return 'Should be at least 10 characters long.';
         }
         return null;
       },
       onSaved: (value) {
         _editedProduct = _editedProduct.copyWith(description: value);
-      },
+      }
     );
   }
-
+  
   Widget buildProductPreview() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -206,23 +209,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ),
           ),
           child: _imageUrlController.text.isEmpty
-              ? const Text("Enter a URL")
+              ? const Text('Enter a URL')
               : FittedBox(
-                  child: Image.network(
+                child: Image.network(
                   _imageUrlController.text,
                   fit: BoxFit.cover,
-                )),
+                )
+              )
         ),
         Expanded(
           child: buildImageURLField(),
-        )
+        ),
       ],
     );
   }
-
+  
   TextFormField buildImageURLField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: "Image URL"),
+      decoration: const InputDecoration(labelText: 'Image URL'),
       keyboardType: TextInputType.url,
       textInputAction: TextInputAction.done,
       controller: _imageUrlController,
@@ -230,16 +234,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
       onFieldSubmitted: (value) => _saveForm(),
       validator: (value) {
         if (value!.isEmpty) {
-          return "Please enter an image URL.";
+          return 'Please enter an image URL.';
         }
         if (!_isValidImageUrl(value)) {
-          return "Please enter a valid image URL.";
+          return 'Please enter a valid image URL.';
         }
         return null;
       },
       onSaved: (value) {
         _editedProduct = _editedProduct.copyWith(imageURL: value);
-      },
+      }
     );
   }
+
 }
+

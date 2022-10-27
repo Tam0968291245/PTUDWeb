@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 import '../../models/cart_item.dart';
 import '../../models/product.dart';
 
@@ -8,12 +9,13 @@ class CartManager with ChangeNotifier {
       id: 'c1',
       title: 'Red Shirt',
       price: 29.99,
-      quantily: 2,
+      quantity: 2,
     ),
   };
+
   int get productCount {
     return _items.length;
-  }
+  } 
 
   List<CartItem> get products {
     return _items.values.toList();
@@ -25,19 +27,18 @@ class CartManager with ChangeNotifier {
 
   double get totalAmount {
     var total = 0.0;
-    _items.forEach((key, CartItem) {
-      total += CartItem.price * CartItem.quantily;
-    });
-    return total;
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
+     });
+     return total;
   }
 
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
-      //change quantity...
       _items.update(
         product.id!,
         (existingCartItem) => existingCartItem.copyWith(
-          quantily: existingCartItem.quantily + 1,
+          quantity: existingCartItem.quantity + 1,
         ),
       );
     } else {
@@ -47,8 +48,8 @@ class CartManager with ChangeNotifier {
           id: 'c${DateTime.now().toIso8601String()}',
           title: product.title,
           price: product.price,
-          quantily: 1,
-        ),
+          quantity: 1,
+        )
       );
     }
     notifyListeners();
@@ -59,16 +60,16 @@ class CartManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeSingleItem(String productId) {
-    if (!_items.containsKey(productId)) {
+  void removeSingleItem (String productId) {
+    if(!_items.containsKey(productId)) {
       return;
     }
-    if (_items[productId]?.quantily as num > 1) {
+    if(_items[productId]?.quantity as num > 1) {
       _items.update(
         productId,
         (existingCartItem) => existingCartItem.copyWith(
-          quantily: existingCartItem.quantily - 1,
-        ),
+          quantity: existingCartItem.quantity - 1,
+        )
       );
     } else {
       _items.remove(productId);
